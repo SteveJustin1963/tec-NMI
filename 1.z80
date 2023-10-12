@@ -1,0 +1,46 @@
+; Assume the 74C923 is connected to Z80 as follows:
+; - 74C923 data output (pin 13, DA) is connected to a Z80 input port (e.g., IN A, (PORT_NUMBER))
+; - NMI generator is connected to Z80's NMI input (pin 11, NMI)
+
+ORG 0000h ; Start address of your program
+
+; Define constants
+PORT_NUMBER EQU 10h ; Replace with the actual port number where 74C923 is connected
+NMI_VECTOR EQU 0066h ; Address where the NMI handler routine will be located
+
+; Initialize
+    DI          ; Disable interrupts during initialization
+    LD A, 00100000b ; Set up interrupt control register (IM 0, NMI enabled)
+    OUT (0FFh), A   ; Write to I/O port for interrupt control (change if needed)
+    IM 0        ; Set interrupt mode to mode 0
+    
+; Assume you will place the NMI handler's address into the NMI vector.
+    LD HL, NMI_Handler ; Load the NMI handler address
+    LD (NMI_VECTOR), HL ; Store it in the NMI vector location
+    
+; Your main program goes here
+    ; [Your main code]
+
+; NMI Handler Routine
+NMI_Handler:
+    PUSH AF     ; Save registers
+    PUSH BC
+    PUSH DE
+    PUSH HL
+
+; Read data from 74C923
+    IN A, (PORT_NUMBER) ; Read the data from the 74C923 into register A
+
+; Process the key press data (A) as needed
+    ; [Your code here to process and store the key press data]
+
+; End of NMI routine
+    POP HL      ; Restore registers
+    POP DE
+    POP BC
+    POP AF
+    EI          ; Enable interrupts
+
+    RETN        ; Return from interrupt (NMI)
+
+END
