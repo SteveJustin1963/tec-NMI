@@ -1,5 +1,7 @@
-##  MINT version 
-- will use the Z interrupt handler for NMI processing.
+## Z interrupt handler for NMI processing in MINT
+
+![image](https://github.com/user-attachments/assets/fc7ae6e0-36f8-4cf5-a8e8-9fcba6299b07)
+
 
 This MINT2 implementation includes:
 
